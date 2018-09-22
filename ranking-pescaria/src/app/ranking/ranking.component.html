@@ -1,28 +1,58 @@
-
 <div class="overlay">
     <div class="row justify-content-end">
-        <div class="col-sm-6 align-self-end" >
+
+        <div class="col-sm-6 align-self-end">
+            <br>
+            <h3>Ranking dos melhores pescadores</h3>
+            <br>
             <table class="table">
-            <thead>
-                <tr>
-                <th scope="col">Posição</th>
-                <th scope="col">Nome</th>
-                <th scope="col">Peixes</th>
-                <th scope="col">Idade</th>
-                <th scope="col" >Opções</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let pescador of ranking, let index = index" >
-                <th scope="row">{{index+1}}</th>
-                <td>{{pescador.nome}}</td>
-                <td>{{pescador.peixes}}</td>
-                <td>{{pescador.idade}}</td>
-                <td>
-                    <button class="btn btn-primary" type="button" (click)="editarDados(pescador._id)" >Atualizar</button>
-                </td>
-                </tr>
-            </tbody>
+                <thead>
+                    <tr>
+                        <th scope="col">Posição</th>
+                        <th scope="col">Nome</th>
+                        <th scope="col">Peixes</th>
+                        <th scope="col">Idade</th>
+                        <th scope="col">Opções</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let pescador of ranking, let index = index">
+                        <th scope="row">{{index+1}}</th>
+                        <td *ngIf="!editando[index]">{{pescador.nome}}</td>
+                        <td *ngIf="editando[index]">
+                            <input [(ngModel)]="pescador.nome" name="nome" type="email" class="form-control" placeholder="Nome completo" aria-describedby="basic-addon">
+                        </td>
+                        <td *ngIf="!editando[index]">{{pescador.peixes}}</td>
+                        <td *ngIf="editando[index]">
+                            <input [(ngModel)]="pescador.peixes" name="peixes" type="number" class="form-control" placeholder="Quantidade de peixes pescado."
+                                aria-describedby="basic-addon">
+                        </td>
+                        <td *ngIf="!editando[index]">{{pescador.idade}}</td>
+                        <td *ngIf="editando[index]">
+                            <input [(ngModel)]="pescador.idade" name="idade" type="number" class="form-control" placeholder="Idade" aria-describedby="basic-addon">
+                        </td>
+                        <td>
+                            <div class="btns-edit">
+                                <button *ngIf="!editando[index]" class="btn btn-sm btn-info" title="Editar" type="button" (click)="abrirEdicao(index)">
+                                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                                </button>
+
+                                <button *ngIf="!editando[index]" class="btn btn-sm btn-danger" title="Excluir" type="button" (click)="excluir(pescador._id)">
+                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                    </button>
+
+                                <button *ngIf="editando[index]" (click)="cancelarEdicao(index)" class="btn btn-sm btn-danger">
+                                    <i class="fa fa-close" aria-hidden="true"></i>
+                                </button>
+
+                                <button *ngIf="editando[index]" (click)="editar(pescador,index)" class="btn btn-sm btn-success">
+                                    <i class="fa fa-check" aria-hidden="true"></i>
+                                </button>
+                            </div>
+
+                        </td>
+                    </tr>
+                </tbody>
             </table>
         </div>
     </div>
@@ -31,51 +61,53 @@
 <div class="masthead">
     <div class="masthead-bg"></div>
     <div class="container h-100">
-    <div class="row h-100">
-        <div class="col-12 my-auto">
+        <div class="row h-100">
+            <div class="col-12 my-auto">
 
-        <div class="masthead-content text-white py-5 py-md-0">
+                <div class="masthead-content text-white py-5 py-md-0">
 
-            <h1 class="mb-3">Procurando Bit Nemo!</h1>
-            <p class="mb-5">
-            Lorem ipsum dolor sit amet, consectetur 
-            adipiscing elit. Fusce velit mi, luctus non efficitur 
-            at, finibus sit amet velit. Aliquam et nisi a.
-            <strong>January 2019</strong>
-            ! Sign up for updates using the form below!
-            </p>
-            
-            <form #formulario="ngForm" >
-                    <div class="row" >
-                
-                        <div class="form-group col-sm-12" >
-                            <label for="">Nome completo</label>
-                            <input [(ngModel)]="pescador.nome" name="nome" type="email" class="form-control" placeholder="Nome completo" aria-describedby="basic-addon">
-                        </div>
-                    
-                        <div class="form-group col-sm-8" >
-                            <label for="">Peixes</label>
-                            <input [(ngModel)]="pescador.peixes" name="peixes" type="number" class="form-control" placeholder="Quantidade de peixes pescado." aria-describedby="basic-addon">
-                        </div>
-                    
-                        <div class="form-group col-sm-4" >
-                            <label for="">Idade</label>
-                            <input [(ngModel)]="pescador.idade" name="idade" type="number" class="form-control" placeholder="Idade" aria-describedby="basic-addon">
-                        </div>
-                    
-                    </div>  
-                    
-                    <div class="input-group input-group-newsletter">
-                      <div>
-                        <button class="btn btn-secondary" (click)="salvarPescador()" type="button">Salvar</button>
-                        <button *ngIf="editando" class="btn btn-danger" (click)="cancelarAtualzacao()" type="button">Cancelar!</button>
-                      </div>
-                    </div>
-                </form>
+                    <h1 class="mb-3">Procurando Bit Nemo!</h1>
+                    <p class="mb-5">
+                        Venha para a nossa barraca!
+                        <br>3 tentativas por 3 R$ ou
+                        <strong>6 tentativas por 5 R$</strong>
+                        ! <br> Prêmios exclusivos para os <strong> 3º melhores pescadores </strong> do ranking!
+                    </p>
 
+                    <form #formulario="ngForm">
+                        <div class="row">
+
+                            <div class="form-group col-sm-12">
+                                <label for="">Nome completo</label>
+                                <input [(ngModel)]="pescador.nome" name="nome" type="email" class="form-control" placeholder="Nome" aria-describedby="basic-addon">
+                            </div>
+
+                            <div class="form-group col-sm-8">
+                                <label for="">Peixes</label>
+                                <input [(ngModel)]="pescador.peixes" name="peixes" type="number" class="form-control" placeholder="Quantidade de peixes pescado."
+                                    aria-describedby="basic-addon">
+                            </div>
+
+                            <div class="form-group col-sm-4">
+                                <label for="">Idade</label>
+                                <input [(ngModel)]="pescador.idade" name="idade" type="number" class="form-control" placeholder="Idade" aria-describedby="basic-addon">
+                            </div>
+
+                        </div>
+
+                        <div class="">
+                            <div class="pull-right">
+                                <button class="btn btn-md btn-success" (click)="salvarPescador()" type="button"
+                                [disabled]="!pescador.idade || !pescador.peixes || !pescador.nome">
+                                    <span><i class="fa fa-plus"></i></span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
         </div>
-        </div>
-    </div>
 
     </div>
 </div>
